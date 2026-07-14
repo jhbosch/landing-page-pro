@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import {
   Facebook,
@@ -32,6 +32,11 @@ const socialLinks = [
 export function Footer() {
   const [email, setEmail] = useState("")
   const [isSubscribed, setIsSubscribed] = useState(false)
+  const [year, setYear] = useState("2026")
+
+  useEffect(() => {
+    setYear(new Date().getFullYear().toString())
+  }, [])
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,8 +69,7 @@ export function Footer() {
               className="text-2xl font-bold font-[family-name:var(--font-heading)] inline-block mb-4"
             >
               <span className="text-[#E63946]">Moto</span>
-              <span className="text-white">Drive</span>
-              <span className="text-[#2563EB]"> Pro</span>
+              <span className="text-white">Rex</span>
             </a>
             <p className="text-white/60 leading-relaxed">
               Tu concesionario de confianza para motos y vehículos premium. Más
@@ -171,7 +175,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="text-center">
           <p className="text-white/40 text-sm">
-            © {new Date().getFullYear()} MotoDrive Pro. Todos los derechos
+            © {year} MotoRex. Todos los derechos
             reservados.
           </p>
         </div>

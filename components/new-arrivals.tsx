@@ -159,7 +159,7 @@ export function NewArrivals() {
                       {item.name}
                     </h3>
                     <p className="text-2xl font-bold text-white mt-3">
-                      ${item.price.toLocaleString()}
+                      ${item.price.toLocaleString("en-US")}
                     </p>
                     <div className="mt-4 flex items-center justify-between gap-3">
                       <Button className="flex-1 bg-[#E63946] hover:bg-[#E63946]/90 text-white">
@@ -272,7 +272,7 @@ export function NewArrivals() {
                       </h4>
                       <p className="text-[#2563EB] text-sm">{item.type}</p>
                       <p className="text-2xl font-bold text-white mt-2">
-                        ${item.price.toLocaleString()}
+                        ${item.price.toLocaleString("en-US")}
                       </p>
                       <div className="mt-4 space-y-2 text-left">
                         {Object.entries(item.specs).map(([key, value]) => (

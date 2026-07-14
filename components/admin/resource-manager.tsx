@@ -173,7 +173,7 @@ export function ResourceManager({ config, rows }: ResourceManagerProps) {
       )
     }
     if (field.name === "price" || field.name === "original_price") {
-      return value ? `$${Number(value).toLocaleString()}` : "—"
+      return value ? `$${Number(value).toLocaleString("en-US")}` : "—"
     }
     if (value === null || value === undefined || value === "") return "—"
     return String(value)

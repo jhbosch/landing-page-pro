@@ -175,10 +175,10 @@ function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
           <div className="mt-6 flex items-center justify-between">
             <div>
               <p className="text-white/50 line-through text-sm">
-                ${vehicle.originalPrice.toLocaleString()}
+                ${vehicle.originalPrice.toLocaleString("en-US")}
               </p>
               <p className="text-2xl font-bold text-white">
-                ${vehicle.currentPrice.toLocaleString()}
+                ${vehicle.currentPrice.toLocaleString("en-US")}
               </p>
             </div>
             <Button className="bg-[#E63946] hover:bg-[#E63946]/90 text-white px-8">
@@ -347,10 +347,10 @@ function VehicleCard({
         <div className="mt-4 flex items-center justify-between">
           <div>
             <p className="text-white/50 text-sm line-through">
-              ${vehicle.originalPrice.toLocaleString()}
+              ${vehicle.originalPrice.toLocaleString("en-US")}
             </p>
             <p className="text-xl font-bold text-white">
-              ${vehicle.currentPrice.toLocaleString()}
+              ${vehicle.currentPrice.toLocaleString("en-US")}
             </p>
           </div>
           <Button

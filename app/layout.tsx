@@ -16,7 +16,7 @@ const openSans = Open_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'MotoDrive Pro | Motos y Vehículos Premium',
+  title: 'MotoRex | Motos y Vehículos Premium',
   description: 'Encuentra el vehículo perfecto para tu próxima aventura. Las mejores marcas de motos, scooters, ATVs y más con financiamiento a tu medida.',
   keywords: ['motos', 'vehículos', 'motorcycles', 'scooters', 'ATV', 'dealership', 'financing'],
   generator: 'v0.app',

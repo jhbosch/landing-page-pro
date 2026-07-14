@@ -44,7 +44,7 @@ function AnimatedCounter({
   return (
     <span className="tabular-nums">
       {prefix}
-      {count.toLocaleString()}
+      {count.toLocaleString("en-US")}
     </span>
   )
 }

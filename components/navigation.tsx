@@ -72,8 +72,7 @@ export function Navigation() {
               whileHover={{ scale: 1.05 }}
             >
               <span className="text-[#E63946]">Moto</span>
-              <span className="text-white">Drive</span>
-              <span className="text-[#2563EB]"> Pro</span>
+              <span className="text-white">Rex</span>
             </motion.a>
 
             {/* Desktop Navigation */}
@@ -141,8 +140,7 @@ export function Navigation() {
               <div className="flex justify-between items-center mb-12">
                 <span className="text-2xl font-bold font-[family-name:var(--font-heading)]">
                   <span className="text-[#E63946]">Moto</span>
-                  <span className="text-white">Drive</span>
-                  <span className="text-[#2563EB]"> Pro</span>
+                  <span className="text-white">Rex</span>
                 </span>
                 <Button
                   variant="ghost"
