@@ -5,6 +5,7 @@ import type {
   Category,
   Testimonial,
   Statistic,
+  SiteConfig,
 } from "@/lib/types"
 
 // ---- PUBLIC (frontend) QUERIES ----
@@ -76,6 +77,16 @@ export async function getStatistics(): Promise<Statistic[]> {
     .select("*")
     .order("sort_order", { ascending: true })
   return data ?? []
+}
+
+export async function getSiteConfig(): Promise<SiteConfig | null> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from("site_config")
+    .select("*")
+    .limit(1)
+    .maybeSingle()
+  return data
 }
 
 // ---- ADMIN QUERIES ----

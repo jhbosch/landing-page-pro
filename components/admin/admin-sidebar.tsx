@@ -14,6 +14,7 @@ import {
   MessageSquareQuote,
   BarChart3,
   Inbox,
+  Settings,
   LogOut,
   Menu,
   X,
@@ -28,6 +29,7 @@ const navItems = [
   { href: "/admin/testimonials", label: "Testimonios", icon: MessageSquareQuote },
   { href: "/admin/statistics", label: "Estadísticas", icon: BarChart3 },
   { href: "/admin/leads", label: "Contactos", icon: Inbox },
+  { href: "/admin/settings", label: "Configuración", icon: Settings },
 ]
 
 export function AdminSidebar({ email }: { email: string }) {
@@ -68,7 +70,7 @@ export function AdminSidebar({ email }: { email: string }) {
             <Bike className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-bold leading-none">MOTOHAUS</p>
+            <p className="text-sm font-bold leading-none">MotoRex</p>
             <p className="text-xs text-muted-foreground">Administración</p>
           </div>
         </div>

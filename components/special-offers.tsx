@@ -167,8 +167,8 @@ function CheckoutModal({ offer, onClose }: CheckoutModalProps) {
                 <div>
                   <h4 className="text-white font-semibold">{offer.name}</h4>
                   <p className="text-[#F4A261] text-xl font-bold">
-                    ${offer.discountedPrice.toLocaleString()}
-                  </p>
+                      ${offer.discountedPrice.toLocaleString("en-US")}
+                    </p>
                 </div>
               </div>
 
@@ -306,10 +306,10 @@ export function SpecialOffers() {
                   </h3>
                   <div className="mt-3 flex items-center gap-3">
                     <p className="text-[#E63946] line-through text-lg">
-                      ${offer.originalPrice.toLocaleString()}
+                      ${offer.originalPrice.toLocaleString("en-US")}
                     </p>
                     <p className="text-[#F4A261] text-3xl font-bold">
-                      ${offer.discountedPrice.toLocaleString()}
+                    ${offer.discountedPrice.toLocaleString("en-US")}
                     </p>
                   </div>
                   <div className="mt-3 flex items-center gap-2 text-[#E63946]">
