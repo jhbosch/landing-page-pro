@@ -68,7 +68,7 @@ export function AdminSidebar({ email }: { email: string }) {
             <Bike className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-bold leading-none">MOTOHAUS</p>
+            <p className="text-sm font-bold leading-none">MotoRex</p>
             <p className="text-xs text-muted-foreground">Administración</p>
           </div>
         </div>
