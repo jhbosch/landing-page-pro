@@ -78,6 +78,54 @@ export type Database = {
         }
         Relationships: []
       }
+      site_config: {
+        Row: {
+          address: string
+          created_at?: string
+          email: string
+          facebook_url: string | null
+          id: string
+          instagram_url: string | null
+          map_url: string | null
+          phone: string
+          site_name: string
+          twitter_url: string | null
+          updated_at: string
+          whatsapp: string
+          youtube_url: string | null
+        }
+        Insert: {
+          address?: string
+          created_at?: string
+          email?: string
+          facebook_url?: string | null
+          id?: string
+          instagram_url?: string | null
+          map_url?: string | null
+          phone?: string
+          site_name?: string
+          twitter_url?: string | null
+          updated_at?: string
+          whatsapp?: string
+          youtube_url?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          email?: string
+          facebook_url?: string | null
+          id?: string
+          instagram_url?: string | null
+          map_url?: string | null
+          phone?: string
+          site_name?: string
+          twitter_url?: string | null
+          updated_at?: string
+          whatsapp?: string
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           created_at: string

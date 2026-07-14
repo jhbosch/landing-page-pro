@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, Search, Phone, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { getPublicSiteConfig } from "@/lib/actions"
 
 const navLinks = [
   { name: "Inicio", href: "#inicio" },
@@ -29,6 +30,18 @@ export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [contact, setContact] = useState<{ phone: string; whatsapp: string } | null>(null)
+
+  useEffect(() => {
+    getPublicSiteConfig().then((res) => {
+      if (res.config) {
+        setContact({
+          phone: res.config.phone,
+          whatsapp: res.config.whatsapp,
+        })
+      }
+    })
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -241,7 +254,7 @@ export function Navigation() {
       {/* Floating Contact Buttons (Mobile) */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 lg:hidden">
         <motion.a
-          href="tel:+1234567890"
+          href={contact ? `tel:${contact.phone.replace(/\s/g, "")}` : "#"}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className="w-14 h-14 bg-[#2563EB] rounded-full flex items-center justify-center shadow-lg shadow-[#2563EB]/30"
@@ -249,7 +262,7 @@ export function Navigation() {
           <Phone className="h-6 w-6 text-white" />
         </motion.a>
         <motion.a
-          href="https://wa.me/1234567890"
+          href={contact ? `https://wa.me/${contact.whatsapp.replace(/\s/g, "")}` : "#"}
           target="_blank"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.1 }}

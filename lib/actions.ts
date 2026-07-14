@@ -174,6 +174,54 @@ export async function submitLead(values: {
   }
 }
 
+export async function updateSiteConfig(
+  values: Partial<Record<string, unknown>>,
+): Promise<ActionResult> {
+  try {
+    const supabase = await requireAuth()
+    // Get the existing config row (should be only one)
+    const { data: existing } = await supabase
+      .from("site_config")
+      .select("id")
+      .limit(1)
+      .maybeSingle()
+
+    if (!existing) {
+      // Insert if no row exists yet
+      const { error } = await supabase
+        .from("site_config")
+        .insert(values)
+      if (error) throw error
+    } else {
+      const { error } = await supabase
+        .from("site_config")
+        .update(values)
+        .eq("id", existing.id)
+      if (error) throw error
+    }
+    revalidatePath("/admin/settings")
+    revalidatePath("/")
+    return { error: null }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Error desconocido" }
+  }
+}
+
+// Public action: fetch site config (no auth required, RLS allows public read).
+export async function getPublicSiteConfig() {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from("site_config")
+      .select("*")
+      .limit(1)
+      .maybeSingle()
+    return { config: data, error: null }
+  } catch (e) {
+    return { config: null, error: e instanceof Error ? e.message : "Error" }
+  }
+}
+
 export async function signOut(): Promise<void> {
   const supabase = await createClient()
   await supabase.auth.signOut()

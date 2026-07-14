@@ -77,6 +77,21 @@ export interface Statistic {
   updated_at: string
 }
 
+export interface SiteConfig {
+  id: string
+  site_name: string
+  phone: string
+  email: string
+  address: string
+  whatsapp: string
+  facebook_url: string | null
+  instagram_url: string | null
+  twitter_url: string | null
+  youtube_url: string | null
+  map_url: string | null
+  updated_at: string
+}
+
 export interface Lead {
   id: string
   name: string

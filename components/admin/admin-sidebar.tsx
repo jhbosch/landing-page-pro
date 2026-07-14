@@ -14,6 +14,7 @@ import {
   MessageSquareQuote,
   BarChart3,
   Inbox,
+  Settings,
   LogOut,
   Menu,
   X,
@@ -28,6 +29,7 @@ const navItems = [
   { href: "/admin/testimonials", label: "Testimonios", icon: MessageSquareQuote },
   { href: "/admin/statistics", label: "Estadísticas", icon: BarChart3 },
   { href: "/admin/leads", label: "Contactos", icon: Inbox },
+  { href: "/admin/settings", label: "Configuración", icon: Settings },
 ]
 
 export function AdminSidebar({ email }: { email: string }) {
