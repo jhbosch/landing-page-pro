@@ -99,7 +99,8 @@ export async function getAllRows(
     | "offers"
     | "categories"
     | "testimonials"
-    | "statistics",
+    | "statistics"
+    | "leads",
 ): Promise<Record<string, unknown>[]> {
   const supabase = await createClient()
   const { data } = await supabase

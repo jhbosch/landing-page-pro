@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import type { FieldConfig } from "@/lib/admin-config"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -13,6 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Upload } from "lucide-react"
+import { uploadImage } from "@/lib/supabase/storage"
 
 interface ResourceFormProps {
   fields: FieldConfig[]
@@ -170,18 +173,56 @@ function ImageField({
   onChange: (v: string) => void
 }) {
   const [preview, setPreview] = useState(value)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    const url = await uploadImage(file)
+    setUploading(false)
+
+    if (url) {
+      onChange(url)
+      setPreview(url)
+    }
+  }
 
   return (
     <div className="grid gap-2">
-      <Input
-        id={id}
-        value={value}
-        placeholder="/imagen.jpg o https://..."
-        onChange={(e) => {
-          onChange(e.target.value)
-          setPreview(e.target.value)
-        }}
+      <div className="flex gap-2">
+        <Input
+          id={id}
+          value={value}
+          placeholder="/imagen.jpg o https://..."
+          className="flex-1"
+          onChange={(e) => {
+            onChange(e.target.value)
+            setPreview(e.target.value)
+          }}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          disabled={uploading}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <Upload className="h-4 w-4" />
+        </Button>
+      </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        className="hidden"
+        onChange={handleFileSelect}
       />
+      {uploading && (
+        <p className="text-xs text-muted-foreground">Subiendo imagen...</p>
+      )}
       {preview && (
         // eslint-disable-next-line @next/next/no-img-element
         <img

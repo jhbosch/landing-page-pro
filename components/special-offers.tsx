@@ -6,36 +6,7 @@ import { Zap, AlertTriangle, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
-const specialOffers = [
-  {
-    id: 1,
-    name: "Polaris Sportsman 570",
-    originalPrice: 8999,
-    discountedPrice: 6299,
-    stock: 2,
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2532&auto=format&fit=crop",
-    isFlash: true,
-  },
-  {
-    id: 2,
-    name: "Harley-Davidson Iron 883",
-    originalPrice: 12999,
-    discountedPrice: 9999,
-    stock: 3,
-    image: "https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?q=80&w=2070&auto=format&fit=crop",
-    isFlash: false,
-  },
-  {
-    id: 3,
-    name: "Aprilia RS 660",
-    originalPrice: 11999,
-    discountedPrice: 8999,
-    stock: 4,
-    image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=2070&auto=format&fit=crop",
-    isFlash: false,
-  },
-]
+import type { Offer } from "@/lib/types"
 
 function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState({
@@ -95,7 +66,7 @@ function CountdownTimer() {
 }
 
 interface CheckoutModalProps {
-  offer: (typeof specialOffers)[0]
+  offer: Offer
   onClose: () => void
 }
 
@@ -160,14 +131,14 @@ function CheckoutModal({ offer, onClose }: CheckoutModalProps) {
             <>
               <div className="flex items-center gap-4 mb-6 p-4 bg-[#0B0C10] rounded-xl">
                 <img
-                  src={offer.image}
-                  alt={offer.name}
+                  src={offer.image_url || "/placeholder.svg"}
+                  alt={offer.title}
                   className="w-20 h-20 object-cover rounded-lg"
                 />
                 <div>
-                  <h4 className="text-white font-semibold">{offer.name}</h4>
+                  <h4 className="text-white font-semibold">{offer.title}</h4>
                   <p className="text-[#F4A261] text-xl font-bold">
-                      ${offer.discountedPrice.toLocaleString("en-US")}
+                      ${Number(offer.price).toLocaleString("en-US")}
                     </p>
                 </div>
               </div>
@@ -223,12 +194,18 @@ function CheckoutModal({ offer, onClose }: CheckoutModalProps) {
   )
 }
 
-export function SpecialOffers() {
-  const [selectedOffer, setSelectedOffer] = useState<
-    (typeof specialOffers)[0] | null
-  >(null)
+const isFlashOffer = (offer: Offer) => offer.discount !== null && offer.discount !== ""
+
+interface SpecialOffersProps {
+  offers: Offer[]
+}
+
+export function SpecialOffers({ offers }: SpecialOffersProps) {
+  const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+
+  if (offers.length === 0) return null
 
   return (
     <section
@@ -270,7 +247,7 @@ export function SpecialOffers() {
 
         {/* Offers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {specialOffers.map((offer, index) => (
+          {offers.map((offer, index) => (
             <motion.div
               key={offer.id}
               initial={{ opacity: 0, y: 30 }}
@@ -278,7 +255,7 @@ export function SpecialOffers() {
               transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               className="relative"
             >
-              {offer.isFlash && (
+              {isFlashOffer(offer) && (
                 <motion.div
                   className="absolute -top-3 -right-3 z-10 bg-[#F4A261] text-[#0B0C10] text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg"
                   animate={{ scale: [1, 1.1, 1] }}
@@ -293,8 +270,8 @@ export function SpecialOffers() {
               >
                 <div className="relative h-56 overflow-hidden">
                   <img
-                    src={offer.image}
-                    alt={offer.name}
+                    src={offer.image_url || "/placeholder.svg"}
+                    alt={offer.title}
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
@@ -302,21 +279,21 @@ export function SpecialOffers() {
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-white font-[family-name:var(--font-heading)]">
-                    {offer.name}
+                    {offer.title}
                   </h3>
                   <div className="mt-3 flex items-center gap-3">
                     <p className="text-[#E63946] line-through text-lg">
-                      ${offer.originalPrice.toLocaleString("en-US")}
+                      ${Number(offer.original_price).toLocaleString("en-US")}
                     </p>
                     <p className="text-[#F4A261] text-3xl font-bold">
-                    ${offer.discountedPrice.toLocaleString("en-US")}
+                    ${Number(offer.price).toLocaleString("en-US")}
                     </p>
                   </div>
                   <div className="mt-3 flex items-center gap-2 text-[#E63946]">
                     <AlertTriangle className="h-4 w-4" />
-                    <span className="text-sm font-medium">
-                      Solo {offer.stock} unidades
-                    </span>
+                    {offer.discount && (
+                      <span className="text-sm font-medium">{offer.discount}</span>
+                    )}
                   </div>
                   <Button
                     className="w-full mt-4 bg-[#E63946] hover:bg-[#E63946]/90 text-white"

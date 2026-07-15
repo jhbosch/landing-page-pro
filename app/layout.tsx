@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Montserrat, Open_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 const montserrat = Montserrat({ 
@@ -54,6 +55,7 @@ export default function RootLayout({
     <html lang="es" className={`${montserrat.variable} ${openSans.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
+        <Toaster richColors position="top-right" />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

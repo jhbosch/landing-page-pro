@@ -30,6 +30,7 @@ export type ManagedTable =
   | "categories"
   | "testimonials"
   | "statistics"
+  | "leads"
 
 export interface ResourceConfig {
   table: ManagedTable
@@ -106,11 +107,17 @@ export const RESOURCES: Record<ManagedTable, ResourceConfig> = {
       { name: "description", label: "Descripción", type: "textarea" },
       { name: "image_url", label: "Imagen", type: "image" },
       { name: "icon", label: "Icono", type: "select", options: [
-        { label: "Deportiva", value: "sport" },
-        { label: "Cruiser", value: "cruiser" },
-        { label: "Aventura", value: "adventure" },
-        { label: "Touring", value: "touring" },
-        { label: "Genérico", value: "generic" },
+        { label: "Motos", value: "bike" },
+        { label: "Scooters", value: "scooter" },
+        { label: "ATV / Cuatriciclos", value: "atv" },
+        { label: "Bicicletas Eléctricas", value: "ebike" },
+        { label: "Autos", value: "car" },
+        { label: "Vehículos Recreativos", value: "rv" },
+        { label: "Camionetas", value: "truck" },
+        { label: "Acuáticos", value: "boat" },
+        { label: "Premium / Alta Gama", value: "luxury" },
+        { label: "Clásicos / Vintage", value: "classic" },
+        { label: "Nuevos Ingresos", value: "new" },
       ] },
       { name: "count", label: "Cantidad de modelos", type: "number", inTable: true },
       STATUS_FIELD,
@@ -147,6 +154,24 @@ export const RESOURCES: Record<ManagedTable, ResourceConfig> = {
       ] },
       STATUS_FIELD,
       SORT_FIELD,
+    ],
+  },
+  leads: {
+    table: "leads",
+    singular: "Lead",
+    plural: "Leads",
+    fields: [
+      { name: "name", label: "Nombre", type: "text", required: true, inTable: true },
+      { name: "email", label: "Email", type: "text", inTable: true },
+      { name: "phone", label: "Teléfono", type: "text", inTable: true },
+      { name: "interest", label: "Interés", type: "text", inTable: true },
+      { name: "message", label: "Mensaje", type: "textarea" },
+      { name: "status", label: "Estado", type: "select", inTable: true, options: [
+        { label: "Nuevo", value: "new" },
+        { label: "Contactado", value: "contacted" },
+        { label: "Cerrado", value: "closed" },
+      ] },
+      { name: "created_at", label: "Recibido", type: "text", inTable: true },
     ],
   },
 }
