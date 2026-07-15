@@ -4,47 +4,14 @@ import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { Testimonial } from "@/lib/types"
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Carlos Rodríguez",
-    location: "Ciudad de México",
-    rating: 5,
-    quote:
-      "Mejor compra del año, la entrega fue rapidísima y el proceso de financiamiento muy sencillo. ¡Mi Yamaha MT-07 es increíble!",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    name: "María González",
-    location: "Guadalajara",
-    rating: 5,
-    quote:
-      "El servicio al cliente es excepcional. Me ayudaron a elegir la moto perfecta para mis necesidades y el precio fue muy competitivo.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    name: "Andrés López",
-    location: "Monterrey",
-    rating: 5,
-    quote:
-      "Compré mi Honda CBR hace 6 meses y no podría estar más feliz. La garantía extendida me da mucha tranquilidad.",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop",
-  },
-  {
-    id: 4,
-    name: "Laura Martínez",
-    location: "Puebla",
-    rating: 5,
-    quote:
-      "Increíble experiencia de compra. El equipo es muy profesional y me dieron seguimiento hasta que recibí mi scooter.",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop",
-  },
-]
+interface TestimonialsProps {
+  testimonials: Testimonial[]
+}
 
-export function Testimonials() {
+export function Testimonials({ testimonials }: TestimonialsProps) {
+  if (testimonials.length === 0) return null
   const scrollRef = useRef<HTMLDivElement>(null)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -111,13 +78,13 @@ export function Testimonials() {
 
                   {/* Quote */}
                   <p className="text-white/80 text-lg leading-relaxed mb-6">
-                    &ldquo;{testimonial.quote}&rdquo;
+                    &ldquo;{testimonial.content}&rdquo;
                   </p>
 
                   {/* Author */}
                   <div className="flex items-center gap-4">
                     <img
-                      src={testimonial.avatar}
+                      src={testimonial.avatar_url || "/placeholder.svg"}
                       alt={testimonial.name}
                       className="w-12 h-12 rounded-full object-cover"
                     />
@@ -126,7 +93,7 @@ export function Testimonials() {
                         {testimonial.name}
                       </p>
                       <p className="text-white/50 text-sm">
-                        {testimonial.location}
+                        {testimonial.role}
                       </p>
                     </div>
                   </div>

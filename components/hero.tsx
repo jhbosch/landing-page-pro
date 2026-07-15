@@ -5,6 +5,7 @@ import { Search, Shield, Banknote, Truck, Star, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
+import type { Product } from "@/lib/types"
 
 const trustBadges = [
   { icon: Shield, title: "Garantía", description: "1 año completo" },
@@ -12,18 +13,11 @@ const trustBadges = [
   { icon: Truck, title: "Entrega rápida", description: "todo el país" },
 ]
 
-const featuredProduct = {
-  name: "Kawasaki Ninja ZX-10R",
-  year: "2024",
-  price: "$18,999",
-  originalPrice: "$21,499",
-  rating: 4.9,
-  reviews: 128,
-  badge: "MÁS VENDIDA",
-  specs: ["998cc", "203 HP", "0-100 en 2.9s"],
+interface HeroProps {
+  product: Product | null
 }
 
-export function Hero() {
+export function Hero({ product }: HeroProps) {
   return (
     <section
       id="inicio"
@@ -150,7 +144,7 @@ export function Hero() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.8 }}
               >
-                {featuredProduct.badge}
+                {product?.badge}
               </motion.div>
 
               {/* Main Image Container */}
@@ -166,8 +160,8 @@ export function Hero() {
                   transition={{ duration: 0.3 }}
                 >
                   <Image
-                    src="/featured-motorcycle.jpg"
-                    alt={featuredProduct.name}
+                    src={product?.image_url || "/featured-motorcycle.jpg"}
+                    alt={product?.name ?? ""}
                     fill
                     className="object-contain drop-shadow-2xl"
                     priority
@@ -179,21 +173,21 @@ export function Hero() {
                   {/* Title and Rating */}
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-white/50 text-sm">{featuredProduct.year}</p>
+                      <p className="text-white/50 text-sm">{product?.year}</p>
                       <h3 className="text-white text-xl font-bold font-[family-name:var(--font-heading)]">
-                        {featuredProduct.name}
+                        {product?.name}
                       </h3>
                     </div>
                     <div className="flex items-center gap-1 bg-white/5 px-2 py-1 rounded-lg">
                       <Star className="w-4 h-4 text-[#F4A261] fill-[#F4A261]" />
-                      <span className="text-white text-sm font-semibold">{featuredProduct.rating}</span>
-                      <span className="text-white/50 text-xs">({featuredProduct.reviews})</span>
+                      <span className="text-white text-sm font-semibold">{product?.rating}</span>
+                      <span className="text-white/50 text-xs">({product?.reviews})</span>
                     </div>
                   </div>
 
                   {/* Specs */}
                   <div className="flex gap-3">
-                    {featuredProduct.specs.map((spec) => (
+                    {(product?.specs || []).map((spec) => (
                       <span
                         key={spec}
                         className="bg-white/5 text-white/70 text-xs px-3 py-1.5 rounded-full border border-white/10"
@@ -206,8 +200,8 @@ export function Hero() {
                   {/* Price and CTA */}
                   <div className="flex items-center justify-between pt-2">
                     <div>
-                      <span className="text-white/50 text-sm line-through">{featuredProduct.originalPrice}</span>
-                      <p className="text-2xl font-bold text-white">{featuredProduct.price}</p>
+                      <span className="text-white/50 text-sm line-through">{product?.original_price ? `$${Number(product.original_price).toLocaleString("en-US")}` : ""}</span>
+                      <p className="text-2xl font-bold text-white">{product ? `$${Number(product.price).toLocaleString("en-US")}` : ""}</p>
                     </div>
                     <Button
                       className="bg-[#E63946] hover:bg-[#E63946]/90 text-white gap-2 shadow-lg shadow-[#E63946]/20"

@@ -53,6 +53,7 @@ function emptyValues(fields: FieldConfig[]): Record<string, unknown> {
   const v: Record<string, unknown> = {}
   for (const f of fields) {
     if (f.type === "boolean") v[f.name] = false
+    else if (f.type === "number") v[f.name] = 0
     else if (f.type === "tags") v[f.name] = []
     else if (f.name === "status") v[f.name] = "active"
     else if (f.name === "sort_order") v[f.name] = 0

@@ -4,24 +4,35 @@ import { BestSellers } from "@/components/best-sellers"
 import { NewArrivals } from "@/components/new-arrivals"
 import { SpecialOffers } from "@/components/special-offers"
 import { Categories } from "@/components/categories"
+import { getCategories, getFeaturedProduct, getBestSellers, getNewArrivals, getOffers, getTestimonials, getStatistics } from "@/lib/queries"
 import { Benefits } from "@/components/benefits"
 import { Statistics } from "@/components/statistics"
 import { Testimonials } from "@/components/testimonials"
 import { ContactForm } from "@/components/contact-form"
 import { Footer } from "@/components/footer"
 
-export default function Home() {
+export default async function Home() {
+  const [categories, featuredProduct, bestSellers, newArrivals, offers, testimonials, statistics] = await Promise.all([
+    getCategories(),
+    getFeaturedProduct(),
+    getBestSellers(),
+    getNewArrivals(),
+    getOffers(),
+    getTestimonials(),
+    getStatistics(),
+  ])
+
   return (
     <main>
       <Navigation />
-      <Hero />
-      <BestSellers />
-      <NewArrivals />
-      <SpecialOffers />
-      <Categories />
+      <Hero product={featuredProduct} />
+      <BestSellers products={bestSellers} />
+      <NewArrivals products={newArrivals} />
+      <SpecialOffers offers={offers} />
+      <Categories categories={categories} />
       <Benefits />
-      <Statistics />
-      <Testimonials />
+      <Statistics statistics={statistics} />
+      <Testimonials testimonials={testimonials} />
       <ContactForm />
       <Footer />
     </main>

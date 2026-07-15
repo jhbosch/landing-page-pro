@@ -2,12 +2,7 @@
 
 import { useRef, useEffect, useState } from "react"
 import { motion, useInView } from "framer-motion"
-
-const stats = [
-  { value: 5000, label: "Vehículos vendidos", prefix: "+" },
-  { value: 3200, label: "Clientes felices", prefix: "+" },
-  { value: 15, label: "Años de experiencia", prefix: "" },
-]
+import type { Statistic } from "@/lib/types"
 
 function AnimatedCounter({
   value,
@@ -49,9 +44,15 @@ function AnimatedCounter({
   )
 }
 
-export function Statistics() {
+interface StatisticsProps {
+  statistics: Statistic[]
+}
+
+export function Statistics({ statistics }: StatisticsProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+
+  if (statistics.length === 0) return null
 
   return (
     <section className="py-20 bg-[#0B0C10]" ref={ref}>
@@ -76,9 +77,9 @@ export function Statistics() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {stats.map((stat, index) => (
+          {statistics.map((stat, index) => (
             <motion.div
-              key={stat.label}
+              key={stat.id}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -95,8 +96,8 @@ export function Statistics() {
                 }}
               >
                 <AnimatedCounter
-                  value={stat.value}
-                  prefix={stat.prefix}
+                  value={Number(stat.value)}
+                  prefix={stat.suffix || ""}
                   isInView={isInView}
                 />
               </motion.div>

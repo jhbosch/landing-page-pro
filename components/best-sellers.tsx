@@ -4,114 +4,19 @@ import { useState, useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { Star, Flame, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { Product } from "@/lib/types"
 
-const bestSellers = [
-  {
-    id: 1,
-    name: "Honda CBR 650R",
-    year: 2024,
-    description: "Deportiva de alto rendimiento con motor de 4 cilindros",
-    originalPrice: 11499,
-    currentPrice: 9899,
-    rating: 4.9,
-    reviews: 128,
-    image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=2070&auto=format&fit=crop",
-    specs: {
-      motor: "649cc, 4 cilindros",
-      potencia: "95 HP",
-      peso: "208 kg",
-      velocidad: "230 km/h",
-    },
-  },
-  {
-    id: 2,
-    name: "Yamaha MT-07",
-    year: 2024,
-    description: "Naked versátil con estilo agresivo y manejo ágil",
-    originalPrice: 8999,
-    currentPrice: 7599,
-    rating: 4.8,
-    reviews: 215,
-    image: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?q=80&w=2070&auto=format&fit=crop",
-    specs: {
-      motor: "689cc, 2 cilindros",
-      potencia: "73 HP",
-      peso: "184 kg",
-      velocidad: "200 km/h",
-    },
-  },
-  {
-    id: 3,
-    name: "Kawasaki Ninja 400",
-    year: 2024,
-    description: "La entrada perfecta al mundo de las supersport",
-    originalPrice: 5999,
-    currentPrice: 5299,
-    rating: 4.7,
-    reviews: 342,
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2532&auto=format&fit=crop",
-    specs: {
-      motor: "399cc, 2 cilindros",
-      potencia: "49 HP",
-      peso: "168 kg",
-      velocidad: "180 km/h",
-    },
-  },
-  {
-    id: 4,
-    name: "Ducati Monster",
-    year: 2024,
-    description: "Icónico diseño italiano con tecnología de punta",
-    originalPrice: 14999,
-    currentPrice: 12999,
-    rating: 4.9,
-    reviews: 89,
-    image: "https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?q=80&w=2070&auto=format&fit=crop",
-    specs: {
-      motor: "937cc, 2 cilindros",
-      potencia: "111 HP",
-      peso: "188 kg",
-      velocidad: "240 km/h",
-    },
-  },
-  {
-    id: 5,
-    name: "BMW G 310 R",
-    year: 2024,
-    description: "Premium alemán accesible con tecnología avanzada",
-    originalPrice: 5999,
-    currentPrice: 4999,
-    rating: 4.6,
-    reviews: 156,
-    image: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?q=80&w=2070&auto=format&fit=crop",
-    specs: {
-      motor: "313cc, 1 cilindro",
-      potencia: "34 HP",
-      peso: "164 kg",
-      velocidad: "143 km/h",
-    },
-  },
-  {
-    id: 6,
-    name: "KTM Duke 390",
-    year: 2024,
-    description: "Agresiva, ligera y con carácter deportivo único",
-    originalPrice: 6499,
-    currentPrice: 5799,
-    rating: 4.8,
-    reviews: 198,
-    image: "https://images.unsplash.com/photo-1622185135505-2d795003994a?q=80&w=2070&auto=format&fit=crop",
-    specs: {
-      motor: "373cc, 1 cilindro",
-      potencia: "43 HP",
-      peso: "163 kg",
-      velocidad: "167 km/h",
-    },
-  },
-]
+function specsToObject(specs: string[]): Record<string, string> {
+  const obj: Record<string, string> = {}
+  specs.forEach((spec, i) => {
+    const keys = ["motor", "potencia", "peso", "velocidad", "alcance"]
+    obj[keys[i] ?? `spec_${i}`] = spec
+  })
+  return obj
+}
 
 interface VehicleModalProps {
-  vehicle: (typeof bestSellers)[0]
+  vehicle: Product
   onClose: () => void
 }
 
@@ -133,7 +38,7 @@ function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
       >
         <div className="relative">
           <img
-            src={vehicle.image}
+            src={vehicle.image_url ?? ""}
             alt={vehicle.name}
             className="w-full h-64 object-cover rounded-t-2xl"
           />
@@ -165,7 +70,7 @@ function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
             <span className="text-white/50">({vehicle.reviews} reseñas)</span>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-4">
-            {Object.entries(vehicle.specs).map(([key, value]) => (
+            {Object.entries(specsToObject(vehicle.specs ?? [])).map(([key, value]) => (
               <div key={key} className="bg-[#0B0C10] rounded-xl p-4">
                 <p className="text-white/50 text-sm capitalize">{key}</p>
                 <p className="text-white font-semibold">{value}</p>
@@ -175,10 +80,10 @@ function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
           <div className="mt-6 flex items-center justify-between">
             <div>
               <p className="text-white/50 line-through text-sm">
-                ${vehicle.originalPrice.toLocaleString("en-US")}
+                ${Number(vehicle.original_price ?? 0).toLocaleString("en-US")}
               </p>
               <p className="text-2xl font-bold text-white">
-                ${vehicle.currentPrice.toLocaleString("en-US")}
+                ${Number(vehicle.price).toLocaleString("en-US")}
               </p>
             </div>
             <Button className="bg-[#E63946] hover:bg-[#E63946]/90 text-white px-8">
@@ -191,10 +96,8 @@ function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
   )
 }
 
-export function BestSellers() {
-  const [selectedVehicle, setSelectedVehicle] = useState<
-    (typeof bestSellers)[0] | null
-  >(null)
+export function BestSellers({ products }: { products: Product[] }) {
+  const [selectedVehicle, setSelectedVehicle] = useState<Product | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -236,7 +139,7 @@ export function BestSellers() {
             ref={scrollRef}
             className="flex gap-4 overflow-x-auto snap-container hide-scrollbar pb-4"
           >
-            {bestSellers.map((vehicle, index) => (
+            {products.map((vehicle, index) => (
               <motion.div
                 key={vehicle.id}
                 className="flex-shrink-0 w-72 snap-item"
@@ -273,7 +176,7 @@ export function BestSellers() {
 
         {/* Desktop Grid */}
         <div className="hidden lg:grid grid-cols-2 xl:grid-cols-4 gap-6">
-          {bestSellers.slice(0, 4).map((vehicle, index) => (
+          {products.slice(0, 4).map((vehicle, index) => (
             <motion.div
               key={vehicle.id}
               initial={{ opacity: 0, y: 30 }}
@@ -304,7 +207,7 @@ function VehicleCard({
   vehicle,
   onSelect,
 }: {
-  vehicle: (typeof bestSellers)[0]
+  vehicle: Product
   onSelect: () => void
 }) {
   return (
@@ -316,7 +219,7 @@ function VehicleCard({
     >
       <div className="relative h-48 overflow-hidden">
         <img
-          src={vehicle.image}
+          src={vehicle.image_url ?? ""}
           alt={vehicle.name}
           loading="lazy"
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -347,10 +250,10 @@ function VehicleCard({
         <div className="mt-4 flex items-center justify-between">
           <div>
             <p className="text-white/50 text-sm line-through">
-              ${vehicle.originalPrice.toLocaleString("en-US")}
+              ${Number(vehicle.original_price ?? 0).toLocaleString("en-US")}
             </p>
             <p className="text-xl font-bold text-white">
-              ${vehicle.currentPrice.toLocaleString("en-US")}
+              ${Number(vehicle.price).toLocaleString("en-US")}
             </p>
           </div>
           <Button

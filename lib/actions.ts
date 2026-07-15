@@ -10,6 +10,7 @@ type ManagedTable =
   | "categories"
   | "testimonials"
   | "statistics"
+  | "leads"
 
 type ActionResult = { error: string | null }
 
@@ -54,7 +55,8 @@ export async function createRecord(
     revalidateAll()
     return { error: null }
   } catch (e) {
-    return { error: e instanceof Error ? e.message : "Error desconocido" }
+    console.error("createRecord error:", e)
+    return { error: e instanceof Error ? e.message : String(e) }
   }
 }
 

@@ -5,66 +5,19 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import { Sparkles, ChevronLeft, ChevronRight, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import type { Product } from "@/lib/types"
 
-const newArrivals = [
-  {
-    id: 1,
-    name: "Suzuki GSX-S1000",
-    year: 2025,
-    type: "Sport",
-    price: 12499,
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2532&auto=format&fit=crop",
-    specs: { motor: "999cc", potencia: "152 HP", peso: "214 kg" },
-  },
-  {
-    id: 2,
-    name: "Vespa Primavera 150",
-    year: 2025,
-    type: "Scooter",
-    price: 5299,
-    image: "https://images.unsplash.com/photo-1558980394-34764db076b4?q=80&w=2070&auto=format&fit=crop",
-    specs: { motor: "155cc", potencia: "12 HP", peso: "134 kg" },
-  },
-  {
-    id: 3,
-    name: "Can-Am Ryker 900",
-    year: 2025,
-    type: "ATV",
-    price: 9999,
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2532&auto=format&fit=crop",
-    specs: { motor: "900cc", potencia: "82 HP", peso: "270 kg" },
-  },
-  {
-    id: 4,
-    name: "Zero SR/F",
-    year: 2025,
-    type: "Eléctrica",
-    price: 19995,
-    image: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?q=80&w=2070&auto=format&fit=crop",
-    specs: { motor: "Eléctrico", potencia: "110 HP", alcance: "259 km" },
-  },
-  {
-    id: 5,
-    name: "Triumph Speed Triple",
-    year: 2025,
-    type: "Sport",
-    price: 16750,
-    image: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?q=80&w=2070&auto=format&fit=crop",
-    specs: { motor: "1160cc", potencia: "180 HP", peso: "198 kg" },
-  },
-  {
-    id: 6,
-    name: "Honda PCX 160",
-    year: 2025,
-    type: "Scooter",
-    price: 4299,
-    image: "https://images.unsplash.com/photo-1558980394-34764db076b4?q=80&w=2070&auto=format&fit=crop",
-    specs: { motor: "156cc", potencia: "15 HP", peso: "132 kg" },
-  },
-]
+function specsToObject(specs: string[]): Record<string, string> {
+  const obj: Record<string, string> = {}
+  specs.forEach((spec, i) => {
+    const keys = ["motor", "potencia", "peso", "velocidad", "alcance"]
+    obj[keys[i] ?? `spec_${i}`] = spec
+  })
+  return obj
+}
 
-export function NewArrivals() {
-  const [selectedForCompare, setSelectedForCompare] = useState<number[]>([])
+export function NewArrivals({ products }: { products: Product[] }) {
+  const [selectedForCompare, setSelectedForCompare] = useState<string[]>([])
   const [showCompare, setShowCompare] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const ref = useRef(null)
@@ -80,7 +33,7 @@ export function NewArrivals() {
     }
   }
 
-  const toggleCompare = (id: number) => {
+  const toggleCompare = (id: string) => {
     setSelectedForCompare((prev) => {
       if (prev.includes(id)) {
         return prev.filter((i) => i !== id)
@@ -90,7 +43,7 @@ export function NewArrivals() {
     })
   }
 
-  const compareItems = newArrivals.filter((item) =>
+  const compareItems = products.filter((item) =>
     selectedForCompare.includes(item.id)
   )
 
@@ -125,7 +78,7 @@ export function NewArrivals() {
             ref={scrollRef}
             className="flex gap-6 overflow-x-auto snap-container hide-scrollbar pb-4"
           >
-            {newArrivals.map((item, index) => (
+            {products.map((item, index) => (
               <motion.div
                 key={item.id}
                 className="flex-shrink-0 w-80 snap-item"
@@ -136,7 +89,7 @@ export function NewArrivals() {
                 <div className="bg-[#0B0C10] rounded-2xl overflow-hidden group relative">
                   <div className="relative h-52 overflow-hidden">
                     <img
-                      src={item.image}
+                      src={item.image_url ?? ""}
                       alt={item.name}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -151,7 +104,7 @@ export function NewArrivals() {
                   <div className="p-5">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[#2563EB] text-sm font-medium">
-                        {item.type}
+                        {item.category}
                       </span>
                       <span className="text-white/60 text-sm">{item.year}</span>
                     </div>
@@ -159,7 +112,7 @@ export function NewArrivals() {
                       {item.name}
                     </h3>
                     <p className="text-2xl font-bold text-white mt-3">
-                      ${item.price.toLocaleString("en-US")}
+                      ${Number(item.price).toLocaleString("en-US")}
                     </p>
                     <div className="mt-4 flex items-center justify-between gap-3">
                       <Button className="flex-1 bg-[#E63946] hover:bg-[#E63946]/90 text-white">
@@ -263,19 +216,19 @@ export function NewArrivals() {
                   {compareItems.map((item) => (
                     <div key={item.id} className="text-center">
                       <img
-                        src={item.image}
+                        src={item.image_url ?? ""}
                         alt={item.name}
                         className="w-full h-40 object-cover rounded-xl mb-4"
                       />
                       <h4 className="text-lg font-bold text-white">
                         {item.name}
                       </h4>
-                      <p className="text-[#2563EB] text-sm">{item.type}</p>
+                      <p className="text-[#2563EB] text-sm">{item.category}</p>
                       <p className="text-2xl font-bold text-white mt-2">
-                        ${item.price.toLocaleString("en-US")}
+                        ${Number(item.price).toLocaleString("en-US")}
                       </p>
                       <div className="mt-4 space-y-2 text-left">
-                        {Object.entries(item.specs).map(([key, value]) => (
+                        {Object.entries(specsToObject(item.specs ?? [])).map(([key, value]) => (
                           <div
                             key={key}
                             className="flex justify-between text-sm"
