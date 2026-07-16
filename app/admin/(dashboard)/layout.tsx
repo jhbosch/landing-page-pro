@@ -21,7 +21,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-svh bg-muted/30">
       <AdminSidebar email={user.email ?? ""} />
-      <main className="flex-1 overflow-x-hidden p-4 md:p-8 md:pl-72">
+      <main className="flex-1 p-4 pt-16 md:p-8 md:pt-8 md:pl-72">
         {children}
       </main>
     </div>
