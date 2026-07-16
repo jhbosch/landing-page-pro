@@ -141,13 +141,12 @@ export function ResourceManager({ config, rows }: ResourceManagerProps) {
     if (field.name === "status") {
       const active = value === "active"
       return (
-        <button
-          onClick={() => handleToggleStatus(row)}
-          disabled={pending}
-          className="inline-flex items-center gap-2"
-          title="Cambiar visibilidad"
-        >
-          <Switch checked={active} className="pointer-events-none" />
+        <div className="inline-flex items-center gap-2">
+          <Switch
+            checked={active}
+            disabled={pending}
+            onCheckedChange={() => handleToggleStatus(row)}
+          />
           <Badge variant={active ? "default" : "secondary"}>
             {active ? (
               <Eye className="mr-1 h-3 w-3" />
@@ -156,7 +155,7 @@ export function ResourceManager({ config, rows }: ResourceManagerProps) {
             )}
             {active ? "Visible" : "Oculto"}
           </Badge>
-        </button>
+        </div>
       )
     }
     if (field.type === "boolean") {
@@ -182,20 +181,21 @@ export function ResourceManager({ config, rows }: ResourceManagerProps) {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">{config.plural}</h1>
           <p className="text-sm text-muted-foreground">
             {rows.length} {rows.length === 1 ? "registro" : "registros"}
           </p>
         </div>
-        <Button onClick={openCreate} className="gap-2">
+        <Button onClick={openCreate} className="w-full gap-2 sm:w-auto">
           <Plus className="h-4 w-4" />
           Nuevo
         </Button>
       </div>
 
-      <div className="rounded-lg border bg-background">
+      {/* ── Desktop table ── */}
+      <div className="hidden overflow-x-auto rounded-lg border bg-background md:block">
         <Table>
           <TableHeader>
             <TableRow>
@@ -246,6 +246,59 @@ export function ResourceManager({ config, rows }: ResourceManagerProps) {
             )}
           </TableBody>
         </Table>
+      </div>
+
+      {/* ── Mobile cards ── */}
+      <div className="space-y-3 md:hidden">
+        {rows.length === 0 ? (
+          <div className="rounded-lg border bg-background py-10 text-center text-sm text-muted-foreground">
+            No hay registros. Crea el primero con el botón &quot;Nuevo&quot;.
+          </div>
+        ) : (
+          rows.map((row) => (
+            <div
+              key={row.id}
+              className="rounded-lg border bg-background p-4"
+            >
+              <div className="space-y-2">
+                {tableFields.map((f) => {
+                  const rendered = renderCell(row, f)
+                  return (
+                    <div key={f.name} className="flex items-center justify-between gap-2">
+                      <span className="shrink-0 text-xs text-muted-foreground">
+                        {f.label}
+                      </span>
+                      <span className="text-right text-sm font-medium">
+                        {rendered}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="mt-3 flex items-center justify-end gap-2 border-t pt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openEdit(row)}
+                  aria-label="Editar"
+                >
+                  <Pencil className="mr-1 h-3 w-3" />
+                  Editar
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setDeleteId(row.id)}
+                  aria-label="Eliminar"
+                  className="text-destructive"
+                >
+                  <Trash2 className="mr-1 h-3 w-3" />
+                  Eliminar
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Create / Edit dialog */}
