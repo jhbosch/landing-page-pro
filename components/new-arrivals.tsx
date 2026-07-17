@@ -88,12 +88,18 @@ export function NewArrivals({ products }: { products: Product[] }) {
               >
                 <div className="bg-[#0B0C10] rounded-2xl overflow-hidden group relative">
                   <div className="relative h-52 overflow-hidden">
-                    <img
-                      src={item.image_url ?? ""}
-                      alt={item.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#0B0C10] to-[#1F1F1F] flex items-center justify-center">
+                        <span className="text-white/20 text-xs">Sin imagen</span>
+                      </div>
+                    )}
                     <div className="absolute top-3 left-3">
                       <span className="bg-gradient-to-r from-[#2563EB] to-[#E63946] text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg">
                         <Sparkles className="h-3 w-3" /> Nuevo
@@ -215,11 +221,17 @@ export function NewArrivals({ products }: { products: Product[] }) {
                 <div className="grid grid-cols-3 gap-6">
                   {compareItems.map((item) => (
                     <div key={item.id} className="text-center">
-                      <img
-                        src={item.image_url ?? ""}
-                        alt={item.name}
-                        className="w-full h-40 object-cover rounded-xl mb-4"
-                      />
+                      {item.image_url ? (
+                        <img
+                          src={item.image_url}
+                          alt={item.name}
+                          className="w-full h-40 object-cover rounded-xl mb-4"
+                        />
+                      ) : (
+                        <div className="w-full h-40 bg-gradient-to-br from-[#0B0C10] to-[#1F1F1F] rounded-xl mb-4 flex items-center justify-center">
+                          <span className="text-white/20 text-xs">Sin imagen</span>
+                        </div>
+                      )}
                       <h4 className="text-lg font-bold text-white">
                         {item.name}
                       </h4>

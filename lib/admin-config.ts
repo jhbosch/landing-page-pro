@@ -31,6 +31,7 @@ export type ManagedTable =
   | "testimonials"
   | "statistics"
   | "leads"
+  | "trust_badges"
 
 export interface ResourceConfig {
   table: ManagedTable
@@ -57,7 +58,34 @@ const SORT_FIELD: FieldConfig = {
   hint: "Número menor aparece primero",
 }
 
+const TRUST_BADGE_ICONS = [
+  { label: "Shield (Garantía)", value: "Shield" },
+  { label: "Truck (Envío)", value: "Truck" },
+  { label: "Star (Calidad)", value: "Star" },
+  { label: "Banknote (Pago)", value: "Banknote" },
+  { label: "Award (Premio)", value: "Award" },
+  { label: "Check (Verificado)", value: "Check" },
+  { label: "Clock (24h)", value: "Clock" },
+  { label: "Headphones (Soporte)", value: "Headphones" },
+  { label: "ThumbsUp (Confianza)", value: "ThumbsUp" },
+  { label: "Zap (Velocidad)", value: "Zap" },
+  { label: "Heart (Favorito)", value: "Heart" },
+  { label: "ShieldCheck", value: "ShieldCheck" },
+]
+
 export const RESOURCES: Record<ManagedTable, ResourceConfig> = {
+  trust_badges: {
+    table: "trust_badges",
+    singular: "Trust Badge",
+    plural: "Trust Badges",
+    fields: [
+      { name: "icon", label: "Icono", type: "select", inTable: true, options: TRUST_BADGE_ICONS },
+      { name: "title", label: "Título", type: "text", required: true, inTable: true },
+      { name: "description", label: "Descripción", type: "text", inTable: true },
+      STATUS_FIELD,
+      SORT_FIELD,
+    ],
+  },
   products: {
     table: "products",
     singular: "Producto",

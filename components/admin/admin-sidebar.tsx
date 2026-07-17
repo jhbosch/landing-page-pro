@@ -19,10 +19,12 @@ import {
   Menu,
   X,
   ExternalLink,
+  Home,
 } from "lucide-react"
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/hero", label: "Hero", icon: Home },
   { href: "/admin/products", label: "Productos", icon: Bike },
   { href: "/admin/offers", label: "Ofertas", icon: Tag },
   { href: "/admin/categories", label: "Categorías", icon: Grid3x3 },

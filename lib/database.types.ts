@@ -309,6 +309,69 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_config: {
+        Row: {
+          id: string
+          badge_text: string
+          headline: string
+          subheadline: string
+          cta_primary: string
+          cta_secondary: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          badge_text?: string
+          headline?: string
+          subheadline?: string
+          cta_primary?: string
+          cta_secondary?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          badge_text?: string
+          headline?: string
+          subheadline?: string
+          cta_primary?: string
+          cta_secondary?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      trust_badges: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          sort_order: number
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          sort_order?: number
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          sort_order?: number
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       testimonials: {
         Row: {
           avatar_url: string | null
