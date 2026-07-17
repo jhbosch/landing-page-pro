@@ -1,23 +1,62 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Search, Shield, Banknote, Truck, Star, ArrowRight } from "lucide-react"
+import { Search, Shield, Truck, Star, Banknote, Award, Check, Clock, Headphones, ThumbsUp, Zap, Heart, ShieldCheck, ArrowRight } from "lucide-react"
+import type { ComponentType, SVGProps } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
-import type { Product } from "@/lib/types"
+import type { Product, HeroConfig, TrustBadge } from "@/lib/types"
 
-const trustBadges = [
-  { icon: Shield, title: "Garantía", description: "1 año completo" },
-  { icon: Banknote, title: "Financiamiento", description: "desde $99/mes" },
-  { icon: Truck, title: "Entrega rápida", description: "todo el país" },
-]
+// ── Icon map for trust badges ──────────────────────────────
+const TRUST_ICON_MAP: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
+  Shield,
+  Truck,
+  Star,
+  Banknote,
+  Award,
+  Check,
+  Clock,
+  Headphones,
+  ThumbsUp,
+  Zap,
+  Heart,
+  ShieldCheck,
+}
+
+// ── Parse headline: wrap *highlighted* words in gradient span
+function renderHeadline(text: string) {
+  const parts = text.split(/(\*[^*]+\*)/g)
+  return parts.map((part, i) => {
+    if (part.startsWith("*") && part.endsWith("*")) {
+      const word = part.slice(1, -1)
+      return (
+        <span
+          key={i}
+          className="text-transparent bg-clip-text bg-gradient-to-r from-[#E63946] to-[#F4A261]"
+        >
+          {word}
+        </span>
+      )
+    }
+    // Preserve leading/trailing spaces so words don't merge
+    return <span key={i}>{part}</span>
+  })
+}
 
 interface HeroProps {
   product: Product | null
+  heroConfig: HeroConfig | null
+  trustBadges: TrustBadge[]
 }
 
-export function Hero({ product }: HeroProps) {
+export function Hero({ product, heroConfig, trustBadges }: HeroProps) {
+  const badgeText = heroConfig?.badge_text ?? "Oferta por tiempo limitado"
+  const headline = heroConfig?.headline ?? "Encuentra el vehículo *perfecto* para tu aventura"
+  const subheadline = heroConfig?.subheadline ?? "Potencia, estilo y libertad. Las mejores marcas con financiamiento a tu medida."
+  const ctaPrimary = heroConfig?.cta_primary ?? "Comprar ahora"
+  const ctaSecondary = heroConfig?.cta_secondary ?? "Ver catálogo"
+
   return (
     <section
       id="inicio"
@@ -52,7 +91,7 @@ export function Hero({ product }: HeroProps) {
               className="inline-flex items-center gap-2 bg-[#E63946]/10 border border-[#E63946]/20 rounded-full px-4 py-2 mb-6"
             >
               <span className="w-2 h-2 bg-[#E63946] rounded-full animate-pulse" />
-              <span className="text-[#E63946] text-sm font-medium">Oferta por tiempo limitado</span>
+              <span className="text-[#E63946] text-sm font-medium">{badgeText}</span>
             </motion.div>
 
             {/* Headline */}
@@ -62,11 +101,7 @@ export function Hero({ product }: HeroProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Encuentra el vehículo{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E63946] to-[#F4A261]">
-                perfecto
-              </span>{" "}
-              para tu aventura
+              {renderHeadline(headline)}
             </motion.h1>
 
             {/* Subheadline */}
@@ -76,7 +111,7 @@ export function Hero({ product }: HeroProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Potencia, estilo y libertad. Las mejores marcas con financiamiento a tu medida.
+              {subheadline}
             </motion.p>
 
             {/* CTA Buttons */}
@@ -90,14 +125,14 @@ export function Hero({ product }: HeroProps) {
                 size="lg"
                 className="bg-[#E63946] hover:bg-[#E63946]/90 text-white text-lg px-8 py-6 shadow-xl shadow-[#E63946]/30"
               >
-                Comprar ahora
+                {ctaPrimary}
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 className="border-[#F4A261] text-[#F4A261] hover:bg-[#F4A261]/10 text-lg px-8 py-6"
               >
-                Ver catálogo
+                {ctaSecondary}
               </Button>
             </motion.div>
 
@@ -108,23 +143,26 @@ export function Hero({ product }: HeroProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              {trustBadges.map((badge, index) => (
-                <motion.div
-                  key={badge.title}
-                  className="flex items-center gap-3"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                >
-                  <div className="w-10 h-10 rounded-lg bg-[#2563EB]/20 flex items-center justify-center flex-shrink-0">
-                    <badge.icon className="h-5 w-5 text-[#2563EB]" />
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold text-sm">{badge.title}</p>
-                    <p className="text-white/50 text-xs">{badge.description}</p>
-                  </div>
-                </motion.div>
-              ))}
+              {trustBadges.map((badge, index) => {
+                const Icon = TRUST_ICON_MAP[badge.icon] ?? Shield
+                return (
+                  <motion.div
+                    key={badge.id}
+                    className="flex items-center gap-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-[#2563EB]/20 flex items-center justify-center flex-shrink-0">
+                      <Icon className="h-5 w-5 text-[#2563EB]" />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold text-sm">{badge.title}</p>
+                      <p className="text-white/50 text-xs">{badge.description}</p>
+                    </div>
+                  </motion.div>
+                )
+              })}
             </motion.div>
           </div>
 
@@ -138,14 +176,16 @@ export function Hero({ product }: HeroProps) {
             {/* Product Card */}
             <div className="relative">
               {/* Badge */}
-              <motion.div
-                className="absolute -top-3 left-4 z-20 bg-gradient-to-r from-[#E63946] to-[#F4A261] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-              >
-                {product?.badge}
-              </motion.div>
+              {product?.badge ? (
+                <motion.div
+                  className="absolute -top-3 left-4 z-20 bg-gradient-to-r from-[#E63946] to-[#F4A261] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                >
+                  {product.badge}
+                </motion.div>
+              ) : null}
 
               {/* Main Image Container */}
               <div className="relative bg-gradient-to-br from-[#1F1F1F] to-[#151515] rounded-3xl p-6 border border-white/5 overflow-hidden">

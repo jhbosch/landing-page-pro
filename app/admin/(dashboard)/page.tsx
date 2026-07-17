@@ -8,12 +8,14 @@ import {
   Inbox,
   ArrowRight,
   Mail,
+  Home,
 } from "lucide-react"
 import Link from "next/link"
 
 export const dynamic = "force-dynamic"
 
 const cards = [
+  { label: "Hero", table: "trust_badges" as const, icon: Home, href: "/admin/hero", color: "from-rose-600 to-rose-700" },
   { label: "Productos", table: "products" as const, icon: Bike, href: "/admin/products", color: "from-blue-600 to-blue-700" },
   { label: "Ofertas", table: "offers" as const, icon: Tag, href: "/admin/offers", color: "from-red-600 to-red-700" },
   { label: "Categorías", table: "categories" as const, icon: Grid3x3, href: "/admin/categories", color: "from-emerald-600 to-emerald-700" },

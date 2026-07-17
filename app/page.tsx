@@ -4,7 +4,7 @@ import { BestSellers } from "@/components/best-sellers"
 import { NewArrivals } from "@/components/new-arrivals"
 import { SpecialOffers } from "@/components/special-offers"
 import { Categories } from "@/components/categories"
-import { getCategories, getFeaturedProduct, getBestSellers, getNewArrivals, getOffers, getTestimonials, getStatistics } from "@/lib/queries"
+import { getCategories, getFeaturedProduct, getBestSellers, getNewArrivals, getOffers, getTestimonials, getStatistics, getHeroConfig, getTrustBadges } from "@/lib/queries"
 import { Benefits } from "@/components/benefits"
 import { Statistics } from "@/components/statistics"
 import { Testimonials } from "@/components/testimonials"
@@ -12,7 +12,7 @@ import { ContactForm } from "@/components/contact-form"
 import { Footer } from "@/components/footer"
 
 export default async function Home() {
-  const [categories, featuredProduct, bestSellers, newArrivals, offers, testimonials, statistics] = await Promise.all([
+  const [categories, featuredProduct, bestSellers, newArrivals, offers, testimonials, statistics, heroConfig, trustBadges] = await Promise.all([
     getCategories(),
     getFeaturedProduct(),
     getBestSellers(),
@@ -20,12 +20,14 @@ export default async function Home() {
     getOffers(),
     getTestimonials(),
     getStatistics(),
+    getHeroConfig(),
+    getTrustBadges(),
   ])
 
   return (
     <main>
       <Navigation />
-      <Hero product={featuredProduct} />
+      <Hero product={featuredProduct} heroConfig={heroConfig} trustBadges={trustBadges} />
       <BestSellers products={bestSellers} />
       <NewArrivals products={newArrivals} />
       <SpecialOffers offers={offers} />

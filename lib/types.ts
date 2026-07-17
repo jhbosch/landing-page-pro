@@ -92,6 +92,27 @@ export interface SiteConfig {
   updated_at: string
 }
 
+export interface HeroConfig {
+  id: string
+  badge_text: string
+  headline: string
+  subheadline: string
+  cta_primary: string
+  cta_secondary: string
+  updated_at: string
+}
+
+export interface TrustBadge {
+  id: string
+  icon: string
+  title: string
+  description: string
+  status: Status
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
 export interface Lead {
   id: string
   name: string

@@ -6,6 +6,8 @@ import type {
   Testimonial,
   Statistic,
   SiteConfig,
+  HeroConfig,
+  TrustBadge,
 } from "@/lib/types"
 
 // ---- PUBLIC (frontend) QUERIES ----
@@ -89,6 +91,27 @@ export async function getSiteConfig(): Promise<SiteConfig | null> {
   return data
 }
 
+// ---- HERO SECTION QUERIES ----
+
+export async function getHeroConfig(): Promise<HeroConfig | null> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from("hero_config")
+    .select("*")
+    .limit(1)
+    .maybeSingle()
+  return data
+}
+
+export async function getTrustBadges(): Promise<TrustBadge[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from("trust_badges")
+    .select("*")
+    .order("sort_order", { ascending: true })
+  return data ?? []
+}
+
 // ---- ADMIN QUERIES ----
 // Authenticated admins can read every row (including hidden) via the
 // `admin_all_*` RLS policies. These power the management tables.
@@ -100,7 +123,8 @@ export async function getAllRows(
     | "categories"
     | "testimonials"
     | "statistics"
-    | "leads",
+    | "leads"
+    | "trust_badges",
 ): Promise<Record<string, unknown>[]> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -129,6 +153,7 @@ export async function getDashboardCounts() {
     "testimonials",
     "statistics",
     "leads",
+    "trust_badges",
   ] as const
   const counts: Record<string, number> = {}
   await Promise.all(

@@ -11,6 +11,7 @@ type ManagedTable =
   | "testimonials"
   | "statistics"
   | "leads"
+  | "trust_badges"
 
 type ActionResult = { error: string | null }
 
@@ -170,6 +171,35 @@ export async function submitLead(values: {
       message: values.message || null,
     })
     if (error) throw error
+    return { error: null }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Error desconocido" }
+  }
+}
+
+export async function updateHeroConfig(
+  values: Partial<Record<string, unknown>>,
+): Promise<ActionResult> {
+  try {
+    const supabase = await requireAuth()
+    const { data: existing } = await supabase
+      .from("hero_config")
+      .select("id")
+      .limit(1)
+      .maybeSingle()
+
+    if (!existing) {
+      const { error } = await supabase.from("hero_config").insert(values)
+      if (error) throw error
+    } else {
+      const { error } = await supabase
+        .from("hero_config")
+        .update(values)
+        .eq("id", existing.id)
+      if (error) throw error
+    }
+    revalidatePath("/admin/hero")
+    revalidatePath("/")
     return { error: null }
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Error desconocido" }

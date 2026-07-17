@@ -37,11 +37,17 @@ function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative">
-          <img
-            src={vehicle.image_url ?? ""}
-            alt={vehicle.name}
-            className="w-full h-64 object-cover rounded-t-2xl"
-          />
+          {vehicle.image_url ? (
+            <img
+              src={vehicle.image_url}
+              alt={vehicle.name}
+              className="w-full h-64 object-cover rounded-t-2xl"
+            />
+          ) : (
+            <div className="w-full h-64 bg-gradient-to-br from-[#1F1F1F] to-[#0B0C10] rounded-t-2xl flex items-center justify-center">
+              <span className="text-white/20 text-sm">Sin imagen</span>
+            </div>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -218,12 +224,18 @@ function VehicleCard({
       onClick={onSelect}
     >
       <div className="relative h-48 overflow-hidden">
-        <img
-          src={vehicle.image_url ?? ""}
-          alt={vehicle.name}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+        {vehicle.image_url ? (
+          <img
+            src={vehicle.image_url}
+            alt={vehicle.name}
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-[#1F1F1F] to-[#0B0C10] flex items-center justify-center">
+            <span className="text-white/20 text-xs">Sin imagen</span>
+          </div>
+        )}
         <div className="absolute top-3 left-3">
           <span className="bg-gradient-to-r from-[#E63946] to-[#F4A261] text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
             <Flame className="h-3 w-3" /> Top ventas
