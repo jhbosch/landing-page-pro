@@ -37,6 +37,8 @@ export interface ResourceConfig {
   singular: string
   plural: string
   fields: FieldConfig[]
+  /** Si se puede crear manualmente desde el admin. Falso para leads que vienen del frontend. */
+  creatable?: boolean
 }
 
 const STATUS_FIELD: FieldConfig = {
@@ -160,6 +162,7 @@ export const RESOURCES: Record<ManagedTable, ResourceConfig> = {
     table: "leads",
     singular: "Lead",
     plural: "Leads",
+    creatable: false,
     fields: [
       { name: "name", label: "Nombre", type: "text", required: true, inTable: true },
       { name: "email", label: "Email", type: "text", inTable: true },
