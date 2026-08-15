@@ -6,6 +6,7 @@ import { Sparkles, ChevronLeft, ChevronRight, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import type { Product } from "@/lib/types"
+import { buildWhatsAppLink } from "@/lib/whatsapp"
 
 function specsToObject(specs: string[]): Record<string, string> {
   const obj: Record<string, string> = {}
@@ -16,7 +17,7 @@ function specsToObject(specs: string[]): Record<string, string> {
   return obj
 }
 
-export function NewArrivals({ products }: { products: Product[] }) {
+export function NewArrivals({ products, whatsapp }: { products: Product[]; whatsapp: string }) {
   const [selectedForCompare, setSelectedForCompare] = useState<string[]>([])
   const [showCompare, setShowCompare] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -115,8 +116,19 @@ export function NewArrivals({ products }: { products: Product[] }) {
                       ${Number(item.price).toLocaleString("en-US")}
                     </p>
                     <div className="mt-4 flex items-center justify-between gap-3">
-                      <Button className="flex-1 bg-[#E63946] hover:bg-[#E63946]/90 text-white">
-                        Reservar ahora
+                      <Button
+                        className="flex-1 bg-[#E63946] hover:bg-[#E63946]/90 text-white"
+                        onClick={() =>
+                          window.open(
+                            buildWhatsAppLink(
+                              whatsapp,
+                              `Hola, me interesa la ${item.name} por $${Number(item.price).toLocaleString("en-US")}.`
+                            ),
+                            "_blank"
+                          )
+                        }
+                      >
+                        Contactar para compra
                       </Button>
                       <div className="hidden lg:flex items-center gap-2">
                         <Checkbox

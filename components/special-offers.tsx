@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { Offer } from "@/lib/types"
+import { submitLead } from "@/lib/actions"
+import { buildWhatsAppLink } from "@/lib/whatsapp"
 
 function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState({
@@ -67,14 +69,35 @@ function CountdownTimer() {
 
 interface CheckoutModalProps {
   offer: Offer
+  whatsapp: string
   onClose: () => void
 }
 
-function CheckoutModal({ offer, onClose }: CheckoutModalProps) {
+function CheckoutModal({ offer, whatsapp, onClose }: CheckoutModalProps) {
   const [submitted, setSubmitted] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = new FormData(e.currentTarget)
+    const name = String(form.get("name") ?? "")
+    const email = String(form.get("email") ?? "")
+    const phone = String(form.get("phone") ?? "")
+    const price = Number(offer.price).toLocaleString("en-US")
+    let message = `Hola, me interesa la ${offer.title} por $${price}. Mi nombre es ${name}, teléfono ${phone}.`
+    if (email) {
+      message += ` Email: ${email}.`
+    }
+    window.open(buildWhatsAppLink(whatsapp, message), "_blank")
+
+    // Registro del lead: interés = oferta elegida, mensaje = texto enviado a WhatsApp.
+    submitLead({
+      name,
+      email,
+      phone,
+      interest: `Oferta: ${offer.title}`,
+      message,
+    })
+
     setSubmitted(true)
     setTimeout(() => {
       onClose()
@@ -150,6 +173,7 @@ function CheckoutModal({ offer, onClose }: CheckoutModalProps) {
                   </Label>
                   <Input
                     id="name"
+                    name="name"
                     required
                     className="bg-[#0B0C10] border-[#333] text-white mt-1"
                     placeholder="Tu nombre"
@@ -161,8 +185,8 @@ function CheckoutModal({ offer, onClose }: CheckoutModalProps) {
                   </Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
-                    required
                     className="bg-[#0B0C10] border-[#333] text-white mt-1"
                     placeholder="tu@email.com"
                   />
@@ -173,6 +197,7 @@ function CheckoutModal({ offer, onClose }: CheckoutModalProps) {
                   </Label>
                   <Input
                     id="phone"
+                    name="phone"
                     type="tel"
                     required
                     className="bg-[#0B0C10] border-[#333] text-white mt-1"
@@ -183,7 +208,7 @@ function CheckoutModal({ offer, onClose }: CheckoutModalProps) {
                   type="submit"
                   className="w-full bg-[#E63946] hover:bg-[#E63946]/90 text-white py-6"
                 >
-                  Confirmar compra
+                  Contactar para compra
                 </Button>
               </form>
             </>
@@ -198,9 +223,10 @@ const isFlashOffer = (offer: Offer) => offer.discount !== null && offer.discount
 
 interface SpecialOffersProps {
   offers: Offer[]
+  whatsapp: string
 }
 
-export function SpecialOffers({ offers }: SpecialOffersProps) {
+export function SpecialOffers({ offers, whatsapp }: SpecialOffersProps) {
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -299,7 +325,7 @@ export function SpecialOffers({ offers }: SpecialOffersProps) {
                     className="w-full mt-4 bg-[#E63946] hover:bg-[#E63946]/90 text-white"
                     onClick={() => setSelectedOffer(offer)}
                   >
-                    Comprar ahora
+                    Contactar para compra
                   </Button>
                 </div>
               </motion.div>
@@ -313,6 +339,7 @@ export function SpecialOffers({ offers }: SpecialOffersProps) {
         {selectedOffer && (
           <CheckoutModal
             offer={selectedOffer}
+            whatsapp={whatsapp}
             onClose={() => setSelectedOffer(null)}
           />
         )}

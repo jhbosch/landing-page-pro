@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion"
 import { Star, Flame, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { Product } from "@/lib/types"
+import { buildWhatsAppLink } from "@/lib/whatsapp"
 
 function specsToObject(specs: string[]): Record<string, string> {
   const obj: Record<string, string> = {}
@@ -17,10 +18,11 @@ function specsToObject(specs: string[]): Record<string, string> {
 
 interface VehicleModalProps {
   vehicle: Product
+  whatsapp: string
   onClose: () => void
 }
 
-function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
+function VehicleModal({ vehicle, whatsapp, onClose }: VehicleModalProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -86,8 +88,19 @@ function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
                 ${Number(vehicle.price).toLocaleString("en-US")}
               </p>
             </div>
-            <Button className="bg-[#E63946] hover:bg-[#E63946]/90 text-white px-8">
-              Comprar ahora
+            <Button
+              className="bg-[#E63946] hover:bg-[#E63946]/90 text-white px-8"
+              onClick={() =>
+                window.open(
+                  buildWhatsAppLink(
+                    whatsapp,
+                    `Hola, me interesa la ${vehicle.name} por $${Number(vehicle.price).toLocaleString("en-US")}.`
+                  ),
+                  "_blank"
+                )
+              }
+            >
+              Contactar para compra
             </Button>
           </div>
         </div>
@@ -96,7 +109,7 @@ function VehicleModal({ vehicle, onClose }: VehicleModalProps) {
   )
 }
 
-export function BestSellers({ products }: { products: Product[] }) {
+export function BestSellers({ products, whatsapp }: { products: Product[]; whatsapp: string }) {
   const [selectedVehicle, setSelectedVehicle] = useState<Product | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const ref = useRef(null)
@@ -196,6 +209,7 @@ export function BestSellers({ products }: { products: Product[] }) {
       {selectedVehicle && (
         <VehicleModal
           vehicle={selectedVehicle}
+          whatsapp={whatsapp}
           onClose={() => setSelectedVehicle(null)}
         />
       )}
