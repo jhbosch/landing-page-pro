@@ -188,10 +188,12 @@ export function ResourceManager({ config, rows }: ResourceManagerProps) {
             {rows.length} {rows.length === 1 ? "registro" : "registros"}
           </p>
         </div>
-        <Button onClick={openCreate} className="w-full gap-2 sm:w-auto">
-          <Plus className="h-4 w-4" />
-          Nuevo
-        </Button>
+        {config.creatable !== false && (
+          <Button onClick={openCreate} className="w-full gap-2 sm:w-auto">
+            <Plus className="h-4 w-4" />
+            Nuevo
+          </Button>
+        )}
       </div>
 
       {/* ── Desktop table ── */}
@@ -206,16 +208,18 @@ export function ResourceManager({ config, rows }: ResourceManagerProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={tableFields.length + 1}
-                  className="py-10 text-center text-muted-foreground"
-                >
-                  No hay registros. Crea el primero con el botón &quot;Nuevo&quot;.
-                </TableCell>
-              </TableRow>
-            ) : (
+              {rows.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={tableFields.length + 1}
+                    className="py-10 text-center text-muted-foreground"
+                  >
+                    {config.creatable === false
+                      ? "No hay registros aún."
+                      : `No hay registros. Crea el primero con el botón "Nuevo".`}
+                  </TableCell>
+                </TableRow>
+              ) : (
               rows.map((row) => (
                 <TableRow key={row.id}>
                   {tableFields.map((f) => (
@@ -252,7 +256,9 @@ export function ResourceManager({ config, rows }: ResourceManagerProps) {
       <div className="space-y-3 md:hidden">
         {rows.length === 0 ? (
           <div className="rounded-lg border bg-background py-10 text-center text-sm text-muted-foreground">
-            No hay registros. Crea el primero con el botón &quot;Nuevo&quot;.
+            {config.creatable === false
+              ? "No hay registros aún."
+              : `No hay registros. Crea el primero con el botón "Nuevo".`}
           </div>
         ) : (
           rows.map((row) => (

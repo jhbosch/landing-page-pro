@@ -156,7 +156,7 @@ export async function updateLeadStatus(
 // Public action: submit a contact lead (no auth required).
 export async function submitLead(values: {
   name: string
-  email: string
+  email?: string
   phone?: string
   interest?: string
   message?: string
@@ -165,7 +165,7 @@ export async function submitLead(values: {
     const supabase = await createClient()
     const { error } = await supabase.from("leads").insert({
       name: values.name,
-      email: values.email,
+      email: values.email || null,
       phone: values.phone || null,
       interest: values.interest || null,
       message: values.message || null,
